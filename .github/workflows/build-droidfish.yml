@@ -13,17 +13,19 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
           cache: gradle
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: ''
 
       - name: Install Android SDK 34 and NDK 25
         run: |
@@ -47,9 +49,13 @@ jobs:
         working-directory: droidfish
         run: chmod +x gradlew
 
+      - name: Clean previous Gradle build
+        working-directory: droidfish
+        run: ./gradlew clean
+
       - name: Build Debug APK
         working-directory: droidfish
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
 
       - name: Find generated APK
         run: |
